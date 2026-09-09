@@ -1,0 +1,14 @@
+- name: Docker present
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+    pkg:
+      - docker.io
+  become: true
+
+- name: Ansible user in docker group
+  ansible.builtin.user.user:
+    name: '{{ ansible_user }}'
+    groups: docker
+    append: true
+  become: true

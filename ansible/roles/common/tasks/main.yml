@@ -1,0 +1,10 @@
+- name: Incoming SSH connections allowed
+  ansible.builtin.ufw:
+    rule: allow
+    name: OpenSSH
+  become: true
+
+- name: Firewall enabled
+  ansible.builtin.ufw:
+    state: enabled
+  become: true

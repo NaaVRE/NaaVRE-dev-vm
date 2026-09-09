@@ -1,0 +1,11 @@
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+
+- name: Enable and restart minikube
+  ansible.builtin.systemd:
+    name: minikube
+    enabled: true
+    state: restarted
+  become: true

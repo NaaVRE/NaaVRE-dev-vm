@@ -1,0 +1,32 @@
+- name: jq package present
+  ansible.builtin.package:
+    state: present
+    name:
+      - jq
+  become: true
+
+- name: minikube package present
+  ansible.builtin.apt:
+    deb: https://github.com/kubernetes/minikube/releases/download/v{{ minikube_version }}/minikube_{{ minikube_version }}-0_amd64.deb
+  become: true
+
+- name: minikube.service present
+  ansible.builtin.template:
+    src: minikube.service.j2
+    dest: /usr/lib/systemd/system/minikube.service
+  become: true
+  notify:
+    - Reload systemd daemon
+    - Enable and restart minikube
+
+- name: minikube0 docker network present
+  community.docker.docker_network:
+    name: minikube0
+    driver: bridge
+    ipam_config:
+      - subnet: "{{ minikube_cidr }}"
+        gateway: "{{ minikube_gateway }}"
+    driver_options:
+      com.docker.network.bridge.gateway_mode_ipv4: "nat-unprotected"
+      com.docker.network.bridge.name: "minikube0"
+    state: present

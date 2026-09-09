@@ -1,0 +1,81 @@
+- name: wireguard present
+  ansible.builtin.package:
+    state: present
+    name:
+      - wireguard
+  become: true
+
+- name: Generate server private key
+  ansible.builtin.shell: |
+    umask 077
+    wg genkey > {{ wg_server_priv_key_path }}
+  args:
+    creates: "{{ wg_server_priv_key_path }}"
+  become: true
+
+- name: Generate server public key
+  ansible.builtin.shell: |
+    umask 077
+    wg pubkey < {{ wg_server_priv_key_path }} > {{ wg_server_pub_key_path }}
+  args:
+    creates: "{{ wg_server_pub_key_path }}"
+  become: true
+
+- name: Generate client private key
+  ansible.builtin.shell: |
+    umask 077
+    wg genkey > {{ wg_client_priv_key_path }}
+  args:
+    creates: "{{ wg_client_priv_key_path }}"
+  become: true
+
+- name: Generate client public key
+  ansible.builtin.shell: |
+    umask 077
+    wg pubkey < {{ wg_client_priv_key_path }} > {{ wg_client_pub_key_path }}
+  args:
+    creates: "{{ wg_client_pub_key_path }}"
+  become: true
+
+- name: Read key files
+  ansible.builtin.slurp:
+    path: "{{ item.path }}"
+  loop:
+    - {path: "{{ wg_server_priv_key_path }}", var: server_priv_key}
+    - {path: "{{ wg_server_pub_key_path }}", var: server_pub_key}
+    - {path: "{{ wg_client_priv_key_path }}", var: client_priv_key}
+    - {path: "{{ wg_client_pub_key_path }}", var: client_pub_key}
+  register: key_slurps
+  become: true
+
+- name: Set key facts
+  ansible.builtin.set_fact:
+    server_priv_key: "{{ key_slurps.results[0].content | b64decode }}"
+    server_pub_key: "{{ key_slurps.results[1].content | b64decode }}"
+    client_priv_key: "{{ key_slurps.results[2].content | b64decode }}"
+    client_pub_key: "{{ key_slurps.results[3].content | b64decode }}"
+
+- name: Wireguard server config present
+  ansible.builtin.template:
+    src: wg_server.conf.j2
+    dest: "{{ wg_server_config_path }}"
+    mode: '600'
+  notify: Enable and restart wg-quick@wg0.service
+  become: true
+
+- name: Wireguard client config present
+  ansible.builtin.template:
+    src: wg_client.conf.j2
+    dest: "{{ wg_client_config_path }}"
+    mode: '600'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  notify: Enable and restart wg-quick@wg0.service
+
+- name: Incoming wireguard connections allowed
+  ansible.builtin.ufw:
+    rule: allow
+    port: '51820'
+    proto: udp
+    comment: wireguard
+  become: true

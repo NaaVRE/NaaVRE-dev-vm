@@ -1,0 +1,28 @@
+# Any address ending with this tld (eg. whatever.test) will be forwarded to the
+# ingress-dns resolver running in the minikube cluster.
+dns_tld: minikube.test
+
+# Minikube version (no leading v)
+# See https://github.com/kubernetes/minikube/releases/
+minikube_version: "1.39.0"
+
+minikube_cidr: 192.168.51.0/24
+minikube_gateway: 192.168.51.1
+minikube_ip: 192.168.51.2
+minikube_disk_size: 50gb
+
+minikube_kubeconfig_path: "/home/{{ ansible_user }}/config_naavre-dev-vm.yaml"
+
+wg_cidr: 192.168.50.0/24
+wg_server_ip: 192.168.50.1
+wg_client_ip: 192.168.50.16
+wg_port: 51820
+
+wg_server_priv_key_path: /etc/wireguard/server.priv
+wg_server_pub_key_path: /etc/wireguard/server.pub
+wg_client_priv_key_path: /etc/wireguard/client.priv
+wg_client_pub_key_path: /etc/wireguard/client.pub
+wg_server_config_path: /etc/wireguard/wg0.conf
+wg_client_config_path: "/home/{{ ansible_user }}/naavre-dev-vm.conf"
+
+fetch_dest_path: "/tmp/naavre-dev-vm"
