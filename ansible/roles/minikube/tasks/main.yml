@@ -30,3 +30,4 @@
       com.docker.network.bridge.gateway_mode_ipv4: "nat-unprotected"
       com.docker.network.bridge.name: "minikube0"
     state: present
+  become: true

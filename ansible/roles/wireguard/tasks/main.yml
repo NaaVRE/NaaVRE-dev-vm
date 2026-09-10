@@ -79,3 +79,11 @@
     proto: udp
     comment: wireguard
   become: true
+
+- name: Route from wg0 to minikube0 allowed
+  community.general.ufw:
+    rule: allow
+    route: true
+    interface_in: wg0
+    interface_out: minikube0
+  become: true

@@ -19,7 +19,6 @@ ExecStartPre=/usr/bin/bash -c 'cm=$(minikube kubectl -- -n kube-system get confi
 ExecStartPre=/usr/bin/bash -c '/usr/bin/minikube kubectl -- config view --flatten > "{{ minikube_kubeconfig_path }}"'
 ExecStart=/usr/bin/minikube logs -f
 ExecStop=/usr/bin/minikube stop
-ExecStopPost=/usr/bin/docker network rm minikube0
 User={{ ansible_user }}
 Group={{ ansible_user }}
 WorkingDirectory=/home/{{ ansible_user }}

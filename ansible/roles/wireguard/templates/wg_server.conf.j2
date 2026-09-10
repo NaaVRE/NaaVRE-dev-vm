@@ -3,9 +3,7 @@ PrivateKey = {{ server_priv_key }}
 Address = {{ wg_server_ip }}/{{ wg_cidr | network_prefixlen }}
 ListenPort = {{ wg_port }}
 
-PostUp = ufw route allow in on wg0 out on minikube0
 PostUp = iptables -I FORWARD -i wg0 -o minikube0 -j ACCEPT
-PreDown = ufw route delete allow in on wg0 out on minikube0
 PreDown = iptables -D FORWARD -i wg0 -o minikube0 -j ACCEPT
 
 [Peer]
