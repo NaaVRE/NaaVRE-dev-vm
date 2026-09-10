@@ -16,7 +16,7 @@ ExecStartPre=/usr/bin/minikube start \
   --disk-size={{ minikube_disk_size }} \
   --static-ip={{ minikube_ip }}
 ExecStartPre=/usr/bin/bash -c 'cm=$(minikube kubectl -- -n kube-system get configmap/coredns -o json | jq ".data.Corefile += \\"test:53 {\\n  errors\\n  cache 30\\n  forward . {{ minikube_ip }}\\n}\\"" | jq "del(.metadata)"); minikube kubectl -- -n kube-system patch configmap/coredns --type merge -p "$cm"'
-ExecStartPre=/usr/bin/bash -c '/usr/bin/minikube kubectl -- config view --flatten > "{{ minikube_kubeconfig_path }}"'
+ExecStartPre=/usr/bin/bash -c '/usr/bin/minikube kubectl -- config view --flatten | yq -y ".[\\"current-context\\"] |= \\"\\"" > "{{ minikube_kubeconfig_path }}"'
 ExecStart=/usr/bin/minikube logs -f
 ExecStop=/usr/bin/minikube stop
 User={{ ansible_user }}

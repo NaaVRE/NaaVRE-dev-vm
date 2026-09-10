@@ -1,5 +1,7 @@
 # NaaVRE development VM
 
+TODO
+
 ## Prerequisites
 
 - Ubuntu 26.04
@@ -67,9 +69,11 @@ kubectl config unset current-context
 - Open your browser at https://naavre-dev.minikube.test
 - Add a security exception for the self-signed SSL certificate (your browser will warn you about it)
 
-The domain name resolution should work out of the box thanks to the wireguard configuration. IF it doesn't work, add the domains to your `/etc/hosts` (or equivalent on non-Linux systems).
+The domain name resolution should work out of the box thanks to the wireguard configuration. IF it doesn't work, add the domains to your `/etc/hosts`, or equivalent on non-Linux systems.
 
 ```
 192.168.51.2 <subdomain>.minikube.test
 192.168.51.2 <other subdomain>.minikube.test
 ```
+
+(The IP address is hard-coded, but if it does not work as expected, verify that it corresponds to the output of `minikube ip` on the VM.)
