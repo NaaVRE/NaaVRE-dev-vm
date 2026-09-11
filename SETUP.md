@@ -4,13 +4,13 @@
 
 This section is about creating a VM on the SNE OpenStack. Typically, this is done by a member of LifeWatch ERIC VLIC or of MNS. However, a VM with similar configuration from another provider should also work.
 
-**Step 1** Create a VM on OpenStack. Configuration:
+**Step 1** Create a VM on OpenStack. Configuration (others might work, but have not been tested):
 
 - Recommended name: `naavre-dev-<user>-<n>` (example: `naavre-dev-sam-1`)
-- Source image: `Ubuntu 26.04`
 - Volume size: 200 GiB
+- Source image: `Ubuntu 26.04`
 - Flavor: `STD-04C008R` (4 vCPU, 8 GB RAM)
-- Security group `naavre-dev-vm` (create it if needed, see details below)
+- Security group `naavre-dev-vm` (create it if needed, see details below) **Important:** remove the `default` security group.
 
 <details>
 <summary>Security group details</summary>
@@ -25,11 +25,9 @@ ALLOW IPv4 icmp from 0.0.0.0/0
 
 </details>
 
-Other configurations might work as well, but have not been tested.
+After creation, the VM automatically applies updates and reboots. This usually takes 5 minutes.
 
-The VM can be accessed with `ssh ubuntu@<IP>` using the SSH key configured in OpenStack, and the IP assigned to the VM.
-
-After creation, the VM automatically applies updates and reboots.
+The VM can be accessed with `ssh ubuntu@<IP>` using the SSH key configured in OpenStack, and the assigned IP.
 
 **Step 2** Append the end user's SSH key to the authorized keys. (Skip if you are the end user.)
 
@@ -223,13 +221,13 @@ you@your-device:~$ curl -kv https://192.168.51.2:443
 
 ```shell
 mkdir .kube/
-scp ubuntu@<vm address>:config_naavre-dev-vm.yaml .kube/
+scp ubuntu@<IP>:config_naavre-dev-vm.yaml .kube/
 ```
 
 **Step 3 Option A**: overwrite the existing kubeconfig (use this if you have no existing files in `~/.kube` that you want to keep)
 
 ```shell
-mv ~/.kube/config_naavre-dev-vm.yaml ~/.kube/config
+mv ~/.kube/config_naavre-dev-vm.yaml ~/.kube/config # <- WARNING: this will delete your kubeconfig. To preserve it, use Option B
 ```
 
 **Step 3 Option B**: merge the kubeconfig with the existing one:
@@ -251,7 +249,7 @@ NAME       STATUS   ROLES           AGE    VERSION
 minikube   Ready    control-plane   118m   v1.37.0
 ```
 
-### Configure access services deployed on Minikube
+### Configure access to services deployed on Minikube
 
 To access a NaaVRE deployment on Minikube, services must be accessed through a domain name (we use `naavre-dev.minikube.net`) from your device. This should work out of the box if you have configured the WireGuard access.
 
@@ -277,7 +275,7 @@ To access a NaaVRE deployment on Minikube, services must be accessed through a d
   you@your-device:~$ dig +noall +answer hello.minikube.test
   hello.minikube.test.	242	IN	A	192.168.51.2
   ```
-  If it fails while the above works: your device is not honoring the WireGuard DNS configuration. As a workaround, add the domains that you need to `/etc/hosts` on your device (or equivalent):
+  If it fails while the previous check succeeds: your device is not honoring the WireGuard DNS configuration. As a workaround, add the domains that you need to `/etc/hosts` on your device (or equivalent):
 
   ```
   # /etc/hosts on your device
@@ -300,4 +298,4 @@ To access a NaaVRE deployment on Minikube, services must be accessed through a d
   </body>
   </html>
   ```
-  - If this fails while the above works: check that everything is running correctly on Minikube. The test deployment (`hello`) is likely not working.
+  - If this fails while the previous check succeeds: check that everything is running correctly on Minikube. The test deployment (`hello`) is likely not working.

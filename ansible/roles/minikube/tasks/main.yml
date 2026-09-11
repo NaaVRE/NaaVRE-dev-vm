@@ -32,3 +32,6 @@
       com.docker.network.bridge.name: "minikube0"
     state: present
   become: true
+
+# trigger handlers so that minikube is running for subsequent roles
+- ansible.builtin.meta: flush_handlers

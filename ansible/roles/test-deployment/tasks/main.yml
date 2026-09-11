@@ -6,6 +6,16 @@
       - python3-kubernetes
   become: true
 
+- name: Wait for ingress endpoint
+  ansible.builtin.uri:
+    url: "https://{{ minikube_ip }}:443"
+    status_code: 404
+    validate_certs: false
+  register: result
+  until: result.status == 404
+  retries: 30
+  delay: 10
+
 - name: hello test app deployed
   kubernetes.core.k8s:
     state: present
