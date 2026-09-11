@@ -1,5 +1,6 @@
 # Any address ending with this tld (eg. whatever.test) will be forwarded to the
 # ingress-dns resolver running in the minikube cluster.
+# (While using .dev might be tempting, don't. Stick to IETF special-use domain names.)
 dns_tld: minikube.test
 
 # Minikube version (no leading v)
