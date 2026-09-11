@@ -1,0 +1,13 @@
+- name: python kubernetes library installed
+  # required by kubernetes.core.k8s ansible module
+  ansible.builtin.package:
+    state: present
+    name:
+      - python3-kubernetes
+  become: true
+
+- name: hello test app deployed
+  kubernetes.core.k8s:
+    state: present
+    template: hello.yml.j2
+    context: minikube

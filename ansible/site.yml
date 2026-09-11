@@ -7,5 +7,7 @@
       tags: docker
     - role: minikube
       tags: minikube
+    - role: test-deployment
+      tags: test-deployment
     - role: wireguard
       tags: wireguard
