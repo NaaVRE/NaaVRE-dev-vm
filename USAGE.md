@@ -12,14 +12,14 @@ Deploy from your device:
 git clone https://github.com/NaaVRE/NaaVRE-helm
 cd NaaVRE-helm
 ./deploy.sh repo-add
-./deploy.sh --kube-context minikube -n -n new-naavre install-keycloak-operator
+./deploy.sh --kube-context minikube -n new-naavre install-keycloak-operator
 ./deploy.sh --kube-context minikube -n new-naavre -f values/values-deploy-minikube.yaml upgrade --install
 ```
 
 Check the deployment status and wait for completion:
 
 ```shell
-kubectl --context minikube -n new-naavre get po
+watch kubectl --context minikube -n new-naavre get po
 # OR
 k9s --context minikube -n new-naavre
 ```
