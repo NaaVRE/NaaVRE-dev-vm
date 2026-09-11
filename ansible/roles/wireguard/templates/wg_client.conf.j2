@@ -1,7 +1,7 @@
 [Interface]
 PrivateKey = {{ client_priv_key }}
 Address = {{ wg_client_ip }}/{{ wg_cidr | network_prefixlen }}
-DNS = {{ wg_server_ip }}, ~{{ dns_tld }}
+DNS = {{ minikube_ip }}, ~{{ dns_tld }}
 
 [Peer]
 PublicKey = {{ server_pub_key }}
