@@ -53,17 +53,27 @@ Warning: Permanently added '<IP>' (ED25519) to the list of known hosts.
 ubuntu@naavre-dev-sam-1:~$
 ```
 
-**Step 2** Clone this repository and run the ansible playbook:
+**Step 2** Clone this repository and install the dependencies:
 
 ```shell
 git clone https://github.com/NaaVRE/NaaVRE-dev-vm
 cd NaaVRE-dev-vm/ansible
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+source venv/bin/activate
+ansible-galaxy collection install -r requirements.yml
+```
+
+**Step 3** Run the playbook
+
+```shell
 ansible-playbook site.yml -u ubuntu -i "<IP>," # <- don't forget the comma!
 ```
 
 **Troubleshooting** If the ansible playbook fails, inspect its source and compare to the error message that you get. Opening a SSH session on the VM and running the failing action in bash might be useful (this might require converting statements from ansible modules to bash commands, e.g. a `ansible.builtin.ufw` becomes a `ufw` command).
 
-**Step 3** Check that it works
+**Step 4** Check that it works
 
 Once the VM is configured, you should be able to perform the following actions from a terminal on the VM:
 
