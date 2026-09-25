@@ -26,6 +26,14 @@ k9s --context minikube -n new-naavre
 
 Open NaaVRE: https://naavre-dev.minikube.test/
 
+To reset a deployment, and get back to a clean state, it is often sufficient to delete the namespace:
+
+```shell
+kubectl --context minikube delete namespace new-naavre
+```
+
+If cluster-level resources were created and also need to be reset, use `sudo systemctl stop minikube.service` (see [Managing the minikube cluster](#managing-the-minikube-cluster)).
+
 ### More info
 
 Go to [NaaVRE-helm](https://github.com/NaaVRE/NaaVRE-helm).
