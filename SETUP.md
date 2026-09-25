@@ -244,7 +244,7 @@ mv ~/.kube/config_naavre-dev-vm.yaml ~/.kube/config # <- WARNING: this will dele
 
 ```shell
 cp --backup=numbered ~/.kube/config ~/.kube/config.bak
-KUBECONFIG="$HOME/.kube/config:$HOME/.kube/config_naavre-dev-vm.yaml" \
+KUBECONFIG="$HOME/.kube/config_naavre-dev-vm.yaml:$HOME/.kube/config" \
   kubectl config view --flatten > /tmp/kubeconfig_merged.yaml \
   && mv /tmp/kubeconfig_merged.yaml ~/.kube/config
 ```
