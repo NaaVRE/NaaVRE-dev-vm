@@ -6,11 +6,18 @@ This section is about creating a VM on the SNE OpenStack. Typically, this is don
 
 **Step 1** Create a VM on OpenStack. Configuration (others might work, but have not been tested):
 
-- Recommended name: `naavre-dev-<user>-<n>` (example: `naavre-dev-sam-1`)
-- Volume size: 200 GiB
+- Details:
+  - Instance name: recommended naming scheme `naavre-dev-<user>-<n>` (example: `naavre-dev-sam-1`)
+- Source:
+  - Boot Source: Image / Create New Volume: Yes
+- Volume size: 200 GiB /  Delete Volume on Instance Delete: Yes
 - Source image: `Ubuntu 26.04`
 - Flavor: `STD-04C008R` (4 vCPU, 8 GB RAM)
-- Security group `naavre-dev-vm` (create it if needed, see details below) **Important:** remove the `default` security group.
+- Networks: `SNE-LAB-VM`
+- Network ports: none (default)
+- Security group `naavre-dev-vm` (create it if needed, see details below) **Important:** remove the `default` security group
+- Key pair: the key pair you added to OpenStack is used by default. If you haven't configured any, you can add one by going to “Compute” > “Key Pairs”
+- Configuration, Server Groups, Scheduler Hints and Metadata: keep defaults
 
 <details>
 <summary>Security group details</summary>
@@ -244,7 +251,7 @@ mv ~/.kube/config_naavre-dev-vm.yaml ~/.kube/config # <- WARNING: this will dele
 
 ```shell
 cp --backup=numbered ~/.kube/config ~/.kube/config.bak
-KUBECONFIG="$HOME/.kube/config:$HOME/.kube/config_naavre-dev-vm.yaml" \
+KUBECONFIG="$HOME/.kube/config_naavre-dev-vm.yaml:$HOME/.kube/config" \
   kubectl config view --flatten > /tmp/kubeconfig_merged.yaml \
   && mv /tmp/kubeconfig_merged.yaml ~/.kube/config
 ```
@@ -309,3 +316,7 @@ To access a NaaVRE deployment on Minikube, services must be accessed through a d
   </html>
   ```
   - If this fails while the previous check succeeds: check that everything is running correctly on Minikube. The test deployment (`hello`) is likely not working.
+
+## Next step
+
+Once the setup is complete, go to [USAGE.md](./USAGE.md).

@@ -72,6 +72,8 @@
     group: "{{ ansible_user }}"
   notify: Enable and restart wg-quick@wg0.service
 
+- ansible.builtin.meta: flush_handlers
+
 - name: Incoming wireguard connections allowed
   ansible.builtin.ufw:
     rule: allow
