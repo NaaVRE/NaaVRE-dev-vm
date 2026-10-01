@@ -39,6 +39,33 @@ kubectl --context minikube delete namespace new-naavre
 
 If cluster-level resources were created and also need to be reset, use `sudo systemctl stop minikube.service` (see [Managing the minikube cluster](#managing-the-minikube-cluster)).
 
+### Additional configuration to containerize cells
+
+Containerizing cells does not work out of the box with the minikube deployment. Cell analysis succeeds, but containerization fails with "Failed to containerize untitled-user: cannot submit cell" and the containerizer service logs `github.GithubException.BadCredentialsException: 401`).
+
+If you need to containerize cells, follow these steps:
+
+- Create your own cells repository using this template: https://github.com/NaaVRE/NaaVRE-cells
+- Generate a fine-grained access token and configure repo permissions, using the template's README.
+- Create a new helm value file referencing your newly created repo and token (don't edit the existing `values-deploy-minikube.yaml` file, as this risks committing the token):
+
+  ```yaml
+  # NaaVRE-helm/values/values-deploy-minikube-cells-repo.yaml
+  jupyterhub:
+    vlabs:
+      openlab:
+        configuration:
+          cell_github_url: https://github.com/user/repo
+          cell_github_token: github_pat_...
+          registry_url: ghcr.io/user/repo
+  ```
+
+- Upgrade your deployment:
+
+  ```shell
+  ./deploy.sh --kube-context minikube -n new-naavre -f values/values-deploy-minikube.yaml -f values/values-deploy-minikube-cells-repo.yaml upgrade --install
+  ```
+
 ### More info
 
 Go to [NaaVRE-helm](https://github.com/NaaVRE/NaaVRE-helm).
