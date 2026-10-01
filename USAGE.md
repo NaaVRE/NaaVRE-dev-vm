@@ -26,6 +26,11 @@ k9s --context minikube -n new-naavre
 
 Open NaaVRE: https://naavre-dev.minikube.test/
 
+To login, use the credentiales defined in [`values-deploy-minikube.yaml`](https://github.com/NaaVRE/NaaVRE-helm/blob/main/values/values-deploy-minikube.yaml). Quick reference:
+- Regular user: `user` / `user`
+- Keycloak admin: `admin` / `admin`
+- Catalogue-service admin: `admin` / `admin`
+
 To reset a deployment, and get back to a clean state, it is often sufficient to delete the namespace:
 
 ```shell
