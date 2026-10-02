@@ -256,6 +256,8 @@ KUBECONFIG="$HOME/.kube/config_naavre-dev-vm.yaml:$HOME/.kube/config" \
   && mv /tmp/kubeconfig_merged.yaml ~/.kube/config
 ```
 
+Note: If you have configs for VLIC-managed clusters, refer to [this page](https://github.com/QCDIS/infrastructure/blob/main/doc/kubernetes/deployment-from-laptop.md#initial-setup).
+
 **Step 4**: verify that it works
 
 You should be able to run kubectl on your device:
